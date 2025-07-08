@@ -90,18 +90,14 @@ def fetch_climate(bacia_id=None, start_date=None, end_date=None, rodada=None, pr
     result = []
     for r in rows:
         prec = r[2]
-        temp = r[3]
-
         if prec is not None and isinstance(prec, float) and math.isnan(prec):
             prec = None
-        if temp is not None and isinstance(temp, float) and math.isnan(temp):
-            temp = None
 
         result.append({
             "bacia_id": r[0],
             "data": r[1],
             "precipitacao_mm": prec,
-            "rodada": r[4],
-            "produto_id": r[5]
+            "rodada": r[3],
+            "produto_id": r[4]
         })
     return result
