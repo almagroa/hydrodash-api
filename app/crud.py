@@ -102,26 +102,54 @@ def fetch_climate(bacia_id=None, start_date=None, end_date=None, rodada=None, pr
         })
     return result
 
-def fetch_bacias():
+def fetch_bacias(bacia_id=None):
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute("SELECT id, cidade, uf, nome, area_km2 FROM bacias")
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-    return [
-        {"id": r[0], "cidade": r[1], "uf": r[2], "nome": r[3], "area_km2": r[4]}
-        for r in rows
-    ]
 
-def fetch_produtos():
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("SELECT id, nome, descricao FROM produtos")
+    query = "SELECT id, cidade, uf, nome, area_km2 FROM bacias WHERE 1=1"
+    params = []
+
+    if bacia_id:
+        query += " AND id = %s"
+        params.append(bacia_id)
+
+    cur.execute(query, params)
     rows = cur.fetchall()
     cur.close()
     conn.close()
-    return [
-        {"id": r[0], "nome": r[1], "descricao": r[2]}
-        for r in rows
-    ]
+
+    result = []
+    for r in rows:
+        result.append({
+            "id": r[0],
+            "cidade": r[1],
+            "uf": r[2],
+            "nome": r[3],
+            "area_km2": float(r[4]) if r[4] is not None else None
+        })
+    return result
+
+def fetch_produtos(produto_id=None):
+    conn = get_conn()
+    cur = conn.cursor()
+
+    query = "SELECT id, nome, descricao FROM produtos WHERE 1=1"
+    params = []
+
+    if produto_id:
+        query += " AND id = %s"
+        params.append(produto_id)
+
+    cur.execute(query, params)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    result = []
+    for r in rows:
+        result.append({
+            "id": r[0],
+            "nome": r[1],
+            "descricao": r[2]
+        })
+    return result
