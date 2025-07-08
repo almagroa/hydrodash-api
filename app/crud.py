@@ -1,7 +1,7 @@
 import math
 from .database import get_conn
 
-def fetch_streamflow(bacia_id=None, start_date=None, end_date=None, limit=100):
+def fetch_streamflow(bacia_id=None, start_date=None, end_date=None, rodada=None, produto_id=None, limit=100):
     conn = get_conn()
     cur = conn.cursor()
 
@@ -21,6 +21,12 @@ def fetch_streamflow(bacia_id=None, start_date=None, end_date=None, limit=100):
     if end_date:
         query += " AND data <= %s"
         params.append(end_date)
+    if rodada:
+        query += " AND rodada = %s"
+        params.append(rodada)
+    if produto_id:
+        query += " AND produto_id = %s"
+        params.append(produto_id)
 
     query += " ORDER BY data LIMIT %s"
     params.append(limit)
@@ -46,12 +52,12 @@ def fetch_streamflow(bacia_id=None, start_date=None, end_date=None, limit=100):
     return result
 
 
-def fetch_climate(bacia_id=None, start_date=None, end_date=None, limit=100):
+def fetch_climate(bacia_id=None, start_date=None, end_date=None, rodada=None, produto_id=None, limit=100):
     conn = get_conn()
     cur = conn.cursor()
 
     query = """
-        SELECT bacia_id, data, prec_mmdia, temp_c, rodada, produto_id
+        SELECT bacia_id, data, precipitacao_mm, rodada, produto_id
         FROM clima
         WHERE 1=1
     """
@@ -66,6 +72,12 @@ def fetch_climate(bacia_id=None, start_date=None, end_date=None, limit=100):
     if end_date:
         query += " AND data <= %s"
         params.append(end_date)
+    if rodada:
+        query += " AND rodada = %s"
+        params.append(rodada)
+    if produto_id:
+        query += " AND produto_id = %s"
+        params.append(produto_id)
 
     query += " ORDER BY data LIMIT %s"
     params.append(limit)
@@ -88,8 +100,7 @@ def fetch_climate(bacia_id=None, start_date=None, end_date=None, limit=100):
         result.append({
             "bacia_id": r[0],
             "data": r[1],
-            "prec_mmdia": prec,
-            "temp_c": temp,
+            "precipitacao_mm": prec,
             "rodada": r[4],
             "produto_id": r[5]
         })

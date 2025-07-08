@@ -10,8 +10,10 @@ def get_streamflow(
     bacia_id: int = None,
     start_date: str = None,
     end_date: str = None,
+    rodada: str = None,
+    produto_id: int = None,
     limit: int = 100
 ):
-    result = fetch_streamflow(bacia_id, start_date, end_date, limit)
+    result = fetch_streamflow(bacia_id, start_date, end_date, rodada, produto_id, limit)
     safe_result = jsonable_encoder(result)
     return JSONResponse(content=safe_result)
