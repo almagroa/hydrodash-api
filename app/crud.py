@@ -1,3 +1,4 @@
+import math
 from .database import get_conn
 
 def fetch_streamflow(bacia_id=None, start_date=None, end_date=None, limit=100):
@@ -29,52 +30,18 @@ def fetch_streamflow(bacia_id=None, start_date=None, end_date=None, limit=100):
     cur.close()
     conn.close()
 
-    return [
-        {
+    result = []
+    for r in rows:
+        valor = r[2]
+        # Substitui nan por None para evitar erro JSON
+        if valor is not None and isinstance(valor, float) and math.isnan(valor):
+            valor = None
+
+        result.append({
             "bacia_id": r[0],
             "data": r[1],
-            "vazao_m3s": float(r[2]),
+            "vazao_m3s": valor,
             "rodada": r[3],
             "produto_id": r[4]
-        } for r in rows
-    ]
-
-def fetch_climate(bacia_id=None, start_date=None, end_date=None, limit=100):
-    conn = get_conn()
-    cur = conn.cursor()
-
-    query = """
-        SELECT bacia_id, data, prec_mmdia, temp_c, rodada, produto_id
-        FROM clima
-        WHERE 1=1
-    """
-    params = []
-
-    if bacia_id:
-        query += " AND bacia_id = %s"
-        params.append(bacia_id)
-    if start_date:
-        query += " AND data >= %s"
-        params.append(start_date)
-    if end_date:
-        query += " AND data <= %s"
-        params.append(end_date)
-
-    query += " ORDER BY data LIMIT %s"
-    params.append(limit)
-
-    cur.execute(query, params)
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-
-    return [
-        {
-            "bacia_id": r[0],
-            "data": r[1],
-            "prec_mmdia": float(r[2]) if r[2] is not None else None,
-            "temp_c": float(r[3]) if r[3] is not None else None,
-            "rodada": r[4],
-            "produto_id": r[5]
-        } for r in rows
-    ]
+        })
+    return result
