@@ -33,7 +33,6 @@ def fetch_streamflow(bacia_id=None, start_date=None, end_date=None, limit=100):
     result = []
     for r in rows:
         valor = r[2]
-        # Substitui nan por None para evitar erro JSON
         if valor is not None and isinstance(valor, float) and math.isnan(valor):
             valor = None
 
@@ -43,5 +42,55 @@ def fetch_streamflow(bacia_id=None, start_date=None, end_date=None, limit=100):
             "vazao_m3s": valor,
             "rodada": r[3],
             "produto_id": r[4]
+        })
+    return result
+
+
+def fetch_climate(bacia_id=None, start_date=None, end_date=None, limit=100):
+    conn = get_conn()
+    cur = conn.cursor()
+
+    query = """
+        SELECT bacia_id, data, prec_mmdia, temp_c, rodada, produto_id
+        FROM clima
+        WHERE 1=1
+    """
+    params = []
+
+    if bacia_id:
+        query += " AND bacia_id = %s"
+        params.append(bacia_id)
+    if start_date:
+        query += " AND data >= %s"
+        params.append(start_date)
+    if end_date:
+        query += " AND data <= %s"
+        params.append(end_date)
+
+    query += " ORDER BY data LIMIT %s"
+    params.append(limit)
+
+    cur.execute(query, params)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    result = []
+    for r in rows:
+        prec = r[2]
+        temp = r[3]
+
+        if prec is not None and isinstance(prec, float) and math.isnan(prec):
+            prec = None
+        if temp is not None and isinstance(temp, float) and math.isnan(temp):
+            temp = None
+
+        result.append({
+            "bacia_id": r[0],
+            "data": r[1],
+            "prec_mmdia": prec,
+            "temp_c": temp,
+            "rodada": r[4],
+            "produto_id": r[5]
         })
     return result
