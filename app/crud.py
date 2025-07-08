@@ -101,3 +101,27 @@ def fetch_climate(bacia_id=None, start_date=None, end_date=None, rodada=None, pr
             "produto_id": r[4]
         })
     return result
+
+def fetch_bacias():
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("SELECT id, cidade, uf, nome, area_km2 FROM bacias")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [
+        {"id": r[0], "cidade": r[1], "uf": r[2], "nome": r[3], "area_km2": r[4]}
+        for r in rows
+    ]
+
+def fetch_produtos():
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("SELECT id, nome, descricao FROM produtos")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [
+        {"id": r[0], "nome": r[1], "descricao": r[2]}
+        for r in rows
+    ]
