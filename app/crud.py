@@ -106,7 +106,7 @@ def fetch_bacias(bacia_id=None):
     conn = get_conn()
     cur = conn.cursor()
 
-    query = "SELECT id, cidade, uf, nome, area_km2 FROM bacias WHERE 1=1"
+    query = "SELECT id, cidade, estado, nome, area_km2 FROM bacias WHERE 1=1"
     params = []
 
     if bacia_id:
@@ -123,7 +123,7 @@ def fetch_bacias(bacia_id=None):
         result.append({
             "id": r[0],
             "cidade": r[1],
-            "uf": r[2],
+            "estado": r[2],
             "nome": r[3],
             "area_km2": float(r[4]) if r[4] is not None else None
         })
