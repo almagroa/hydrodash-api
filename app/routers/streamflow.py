@@ -3,11 +3,14 @@ from fastapi import Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from app.crud import fetch_streamflow
+from fastapi import Depends
+from app.auth import verify_token
 
 router = APIRouter()
 
 @router.get("/streamflow", tags=["Vazão"], summary="Consulta dados de vazão prevista")
 def get_streamflow(
+    token: str = Depends(verify_token),
     bacia_id: int = Query(None, description="ID da bacia hidrográfica"),
     start_date: str = Query(None, description="Data inicial da previsão (YYYY-MM-DD)"),
     end_date: str = Query(None, description="Data final da previsão (YYYY-MM-DD)"),
