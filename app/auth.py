@@ -19,11 +19,11 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 fake_users_db = {
     "admin": {
         "username": "admin",
-        "hashed_password": "$2b$12$KIXeU/9D7lG5V9n8CPTj6uB6CNYJXyMiAfpbM5fY5pT7FQnR9RVq2"
+        "hashed_password": "senha123"
     },
     "aegea_test": {
         "username": "aegea_test",
-        "hashed_password": "$2b$12$yA2O1cXQtHIkzxM8S0CjOOqY7eH/8xlbUjNGBi4w7O9bW6S1g8L4G"
+        "hashed_password": "H!3sR@8kP#0m"
     }
 }
 
