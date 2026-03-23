@@ -19,11 +19,11 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 fake_users_db = {
     "admin": {
         "username": "admin",
-        "hashed_password": pwd_context.hash("senha123")
+        "hashed_password": pwd_context.hash("senha123"[:72])
     },
     "aegea": {
         "username": "aegea",
-        "hashed_password": pwd_context.hash("H!3sR@8kP#0m")
+        "hashed_password": pwd_context.hash("H!3sR@8kP#0m"[:72])
     }
 }
 
