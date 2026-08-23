@@ -287,20 +287,23 @@ def fetch_cotas_obs(bacia_id=None, start_date=None, end_date=None, limit=100):
         })
     return result
 
-def fetch_previsao_chuva_rs(id=None, start_date=None, end_date=None, rodada=None, produto_id=None, limit=100):
+def fetch_previsao_chuva_rs(nome=None, tipo=None, start_date=None, end_date=None, rodada=None, produto_id=None, limit=100):
     conn = get_conn()
     cur = conn.cursor()
 
     query = """
-        SELECT id, nome, tipo, data, precipitacao_mm, rodada, produto_id
+        SELECT nome, tipo, data, precipitacao_mm, rodada, produto_id
         FROM previsao_chuva_rs
         WHERE 1=1
     """
     params = []
 
-    if id:
-        query += " AND id = %s"
-        params.append(id)
+    if nome:
+        query += " AND nome ILIKE %s"
+        params.append(f"%{nome}%")
+    if tipo:
+        query += " AND tipo = %s"
+        params.append(tipo)
     if start_date:
         query += " AND data >= %s"
         params.append(start_date)
@@ -324,17 +327,16 @@ def fetch_previsao_chuva_rs(id=None, start_date=None, end_date=None, rodada=None
 
     result = []
     for r in rows:
-        prec = r[4]
+        prec = r[3]
         if prec is not None and isinstance(prec, float) and math.isnan(prec):
             prec = None
 
         result.append({
-            "id": r[0],
-            "nome": r[1],
-            "tipo": r[2],
-            "data": r[3],
+            "nome": r[0],
+            "tipo": r[1],
+            "data": r[2],
             "precipitacao_mm": prec,
-            "rodada": r[5],
-            "produto_id": r[6]
+            "rodada": r[4],
+            "produto_id": r[5]
         })
     return result
