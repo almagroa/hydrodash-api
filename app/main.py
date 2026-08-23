@@ -27,7 +27,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import streamflow, clima, bacias, produtos, auth, cotas
+from app.routers import streamflow, clima, bacias, produtos, auth, cotas, previsao_chuva_rs
 
 app = FastAPI(
     title="Hydrodash API",
@@ -49,3 +49,4 @@ app.include_router(clima.router, tags=["Clima"])
 app.include_router(bacias.router, tags=["Metadados"])
 app.include_router(produtos.router, tags=["Metadados"])
 app.include_router(cotas.router, tags=["Cotas"])
+app.include_router(previsao_chuva_rs.router, tags=["Previsão Chuva RS"])
