@@ -6,7 +6,7 @@ from app.auth import verify_token
 
 router = APIRouter()
 
-@router.get("/previsao-chuva-rs", tags=["Previsão Chuva RS"], summary="Consulta dados de previsão de chuva para o RS")
+@router.get("/previsao_chuva_rs", tags=["Previsão Chuva RS"], summary="Consulta dados de previsão de chuva para o RS")
 def get_previsao_chuva_rs(
     token: str = Depends(verify_token),
     nome: str = Query(None, description="Nome do local (parcial ou completo)"),
