@@ -9,3 +9,7 @@ def get_conn():
         password=os.getenv("DB_PASS"),
         port=os.getenv("DB_PORT")
     )
+
+def release_conn(conn):
+    if conn:
+        conn.close()
