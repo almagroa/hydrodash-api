@@ -23,31 +23,38 @@ A arquitetura da Hydrodash API segue o padrão REST sobre HTTP com segurança ba
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Cliente as Cliente (Python / Power BI / R / Excel)
-    participant API as Hydrodash REST API (FastAPI)
-    participant Auth as Componente de Autenticação (OAuth2)
-    database DB as Banco de Dados PostgreSQL (Railway)
 
-    Note over Cliente, API: 1. Fluxo de Autenticação
-    Cliente->>API: POST /token (username, password no formato form-urlencoded)
-    API->>Auth: Valida credenciais cadastradas
-    alt Credenciais Válidas
-        Auth-->>API: Gera Token de Acesso JWT
-        API-->>Cliente: Retorna HTTP 200 com Access Token
-    else Credenciais Inválidas
-        Auth-->>API: Rejeita autenticação
-        API-->>Cliente: Retorna HTTP 400 (Usuário ou senha inválidos)
+    actor Cliente
+    participant API as Hydrodash REST API
+    participant Auth as Autenticacao OAuth2
+    participant DB as PostgreSQL
+
+    Note over Cliente,API: 1. Fluxo de autenticacao
+
+    Cliente->>API: POST /token
+    API->>Auth: Valida credenciais
+
+    alt Credenciais validas
+        Auth-->>API: Gera access token
+        API-->>Cliente: HTTP 200 - Access Token
+    else Credenciais invalidas
+        Auth-->>API: Rejeita autenticacao
+        API-->>Cliente: HTTP 400 - Credenciais invalidas
     end
 
-    Note over Cliente, DB: 2. Fluxo de Consulta de Dados
-    Cliente->>API: GET /streamflow?bacia_id=1&limit=100 (Header: Authorization: Bearer <TOKEN>)
-    API->>Auth: Valida assinatura e expiração do Token
-    alt Token Válido
-        API->>DB: Executa consulta SQL otimizada (SELECT ... WHERE ...)
-        DB-->>API: Retorna os registros da tabela correspondente
-        API-->>Cliente: Retorna HTTP 200 com array JSON dos registros
-    else Token Inválido ou Expirado
-        API-->>Cliente: Retorna HTTP 401 (Unauthorized / Token inválido)
+    Note over Cliente,DB: 2. Fluxo de consulta
+
+    Cliente->>API: GET /streamflow
+    API->>Auth: Valida access token
+
+    alt Token valido
+        Auth-->>API: Token valido
+        API->>DB: Executa consulta SQL
+        DB-->>API: Retorna registros
+        API-->>Cliente: HTTP 200 - Array JSON
+    else Token invalido ou expirado
+        Auth-->>API: Token rejeitado
+        API-->>Cliente: HTTP 401 - Unauthorized
     end
 ```
 
