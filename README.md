@@ -1,5 +1,5 @@
 # Documentação Técnica da Hydrodash API
-*Versão da Documentação: 1.0.0*  
+*Versão da Documentação: 1.1.3*  
 *Data de Atualização: 27 de Agosto de 2026*  
 
 ---
@@ -611,7 +611,7 @@ Ocorre quando o formato de um parâmetro não corresponde ao esperado (ex: passa
 
 ## 11. Bacias Disponíveis
 
-A Hydrodash API cobre um total de **127 bacias hidrográficas** brasileiras de diferentes escalas e regiões. Abaixo, consolida-se a lista completa de bacias cadastradas no sistema, que podem ser obtidas dinamicamente pelo endpoint `/bacias`:
+A Hydrodash API cobre um total de **112 bacias hidrográficas** brasileiras de diferentes escalas e regiões. Abaixo, consolida-se a lista completa de bacias cadastradas no sistema, que podem ser obtidas dinamicamente pelo endpoint `/bacias`:
 
 | ID | Município | UF | Nome | Área (km²) |
 | -: | --------- | -- | ---- | ---------: |
@@ -727,21 +727,6 @@ A Hydrodash API cobre um total de **127 bacias hidrográficas** brasileiras de d
 | 110 | Manoel Ribeiro | RJ | Captação Ponta Negra | 41.50 |
 | 111 | Itaboraí | RJ | Lagoa São José | 18.61 |
 | 112 | Tanguá | RJ | Rio Tanguá | 92.59 |
-| 113 | Oriximiná | PA | Rio Trombetas | 0.00 |
-| 114 | Itaiatuba | PA | Rio Tapajós | 0.00 |
-| 115 | Esperantina | PI | Bacia Esperantina | 0.00 |
-| 116 | Teresina | PI | Bacia Teresina | 0.00 |
-| 117 | Luzilândia | PI | Bacia Luzilândia | 0.00 |
-| 118 | Piracuruca | PI | Bacia Piracuruca | 0.00 |
-| 119 | Ariquemes | RO | Bacias Ariquemes | 0.00 |
-| 120 | Almirante Tamandaré | PR | Almirante Tamandaré | 0.00 |
-| 121 | Campo Largo | PR | Campo Largo | 0.00 |
-| 122 | Ibaiti | PR | Ibaiti | 0.00 |
-| 123 | Guaratuba | PR | Guaratuba | 0.00 |
-| 124 | Morretes | PR | Morretes | 0.00 |
-| 125 | Palmital | PR | Palmital | 0.00 |
-| 126 | Pinhão | PR | Pinhão | 0.00 |
-| 127 | Rio Negro | PR | Rio Negro | 0.00 |
 
 ---
 
