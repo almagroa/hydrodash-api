@@ -20,43 +20,66 @@ Os dados disponibilizados destinam-se a dar suporte a tomadas de decisão nos se
 
 A arquitetura da Hydrodash API segue o padrão REST sobre HTTP com segurança baseada em token Bearer. A API se comunica diretamente com um banco de dados PostgreSQL hospedado no Railway, onde as rodadas dos modelos climáticos e hidrológicos são salvas diariamente por meio de pipelines de dados automatizados.
 
+### Fluxo de autenticação
+
+A autenticação da Hydrodash API é realizada por meio do endpoint `/token`.
+
+O cliente envia suas credenciais para a API, que realiza a validação. Quando as
+credenciais são válidas, um **Access Token** é retornado ao cliente.
+
+Esse token deve ser utilizado nas requisições subsequentes aos endpoints
+protegidos da API, por meio do cabeçalho `Authorization`, no formato:
+
+```text
+Authorization: Bearer <TOKEN>
+```
+
+O fluxo de autenticação é representado abaixo:
+
 ```mermaid
 sequenceDiagram
     autonumber
 
     actor Cliente
     participant API as Hydrodash API
-    participant Auth as OAuth2
-    participant DB as PostgreSQL
-
-    Note over Cliente,API: Autenticacao
+    participant Auth as Autenticacao
 
     Cliente->>API: POST /token
-    API->>Auth: Valida credenciais
+    API->>Auth: Validar credenciais
+    Auth-->>API: Access Token
+    API-->>Cliente: Access Token
+```
 
-    alt Credenciais validas
-        Auth-->>API: Access Token
-        API-->>Cliente: HTTP 200
-    else Credenciais invalidas
-        Auth-->>API: Rejeita credenciais
-        API-->>Cliente: HTTP 400
-    end
+---
 
-    Note over Cliente,DB: Consulta de dados
+### Fluxo de consulta de dados
+
+Após obter um **Access Token** válido, o cliente pode realizar consultas aos
+endpoints protegidos da Hydrodash API.
+
+No exemplo abaixo, o cliente solicita dados de vazão por meio do endpoint
+`/streamflow`. A API processa a requisição autenticada, consulta os dados
+correspondentes no banco de dados PostgreSQL e retorna os registros ao cliente
+em formato JSON.
+
+O fluxo geral de consulta é representado abaixo:
+
+```mermaid
+sequenceDiagram
+    autonumber
+
+    actor Cliente
+    participant API as Hydrodash API
+    participant DB as PostgreSQL
 
     Cliente->>API: GET /streamflow
-    API->>Auth: Valida token
-
-    alt Token valido
-        Auth-->>API: Token validado
-        API->>DB: Consulta dados
-        DB-->>API: Retorna registros
-        API-->>Cliente: HTTP 200 - JSON
-    else Token invalido
-        Auth-->>API: Token rejeitado
-        API-->>Cliente: HTTP 401
-    end
+    API->>DB: Consultar dados
+    DB-->>API: Retornar registros
+    API-->>Cliente: JSON
 ```
+
+O mesmo fluxo se aplica, de forma geral, aos demais endpoints de consulta da
+API, respeitando os parâmetros e filtros específicos de cada recurso.
 
 ---
 
