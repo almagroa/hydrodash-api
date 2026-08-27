@@ -25,36 +25,36 @@ sequenceDiagram
     autonumber
 
     actor Cliente
-    participant API as Hydrodash REST API
-    participant Auth as Autenticacao OAuth2
+    participant API as Hydrodash API
+    participant Auth as OAuth2
     participant DB as PostgreSQL
 
-    Note over Cliente,API: 1. Fluxo de autenticacao
+    Note over Cliente,API: Autenticacao
 
     Cliente->>API: POST /token
     API->>Auth: Valida credenciais
 
     alt Credenciais validas
-        Auth-->>API: Gera access token
-        API-->>Cliente: HTTP 200 - Access Token
+        Auth-->>API: Access Token
+        API-->>Cliente: HTTP 200
     else Credenciais invalidas
-        Auth-->>API: Rejeita autenticacao
-        API-->>Cliente: HTTP 400 - Credenciais invalidas
+        Auth-->>API: Rejeita credenciais
+        API-->>Cliente: HTTP 400
     end
 
-    Note over Cliente,DB: 2. Fluxo de consulta
+    Note over Cliente,DB: Consulta de dados
 
     Cliente->>API: GET /streamflow
-    API->>Auth: Valida access token
+    API->>Auth: Valida token
 
     alt Token valido
-        Auth-->>API: Token valido
-        API->>DB: Executa consulta SQL
+        Auth-->>API: Token validado
+        API->>DB: Consulta dados
         DB-->>API: Retorna registros
-        API-->>Cliente: HTTP 200 - Array JSON
-    else Token invalido ou expirado
+        API-->>Cliente: HTTP 200 - JSON
+    else Token invalido
         Auth-->>API: Token rejeitado
-        API-->>Cliente: HTTP 401 - Unauthorized
+        API-->>Cliente: HTTP 401
     end
 ```
 
