@@ -16,7 +16,7 @@ def get_climate(
     end_date: str = Query(None, description="Data final da previsão (YYYY-MM-DD)"),
     rodada: str = Query(None, description="Data da rodada no formato (YYYY-MM-DD)"),
     produto_id: int = Query(None, description="ID do modelo climático"),
-    limit: int = Query(100, description="Limite de registros retornados")
+    limit: int = Query(100, le=10000, description="Limite de registros retornados")
 ):
     result = fetch_climate(bacia_id, start_date, end_date, rodada, produto_id, limit)
     safe_result = jsonable_encoder(result)

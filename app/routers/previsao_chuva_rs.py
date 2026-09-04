@@ -15,7 +15,7 @@ def get_previsao_chuva_rs(
     end_date: str = Query(None, description="Data final (YYYY-MM-DD)"),
     rodada: str = Query(None, description="Data da rodada no formato (YYYY-MM-DD)"),
     produto_id: int = Query(None, description="ID do produto/modelo"),
-    limit: int = Query(100, description="Limite de registros retornados")
+    limit: int = Query(100, le=10000, description="Limite de registros retornados")
 ):
     result = fetch_previsao_chuva_rs(nome, tipo, start_date, end_date, rodada, produto_id, limit)
     safe_result = jsonable_encoder(result)
